@@ -15,9 +15,9 @@
                 
                 ```
                 {
-                				 	msgType : ”joinRoom”,
-                		      guestId: “aaa1234”,
-                					sendTime : yyyymmmdddhhhmmss        
+                	    msgType : ”joinRoom”,
+                		guestId: “aaa1234”,
+                		sendTime : yyyymmmdddhhhmmss        
                 };
                 ```
                 
@@ -29,9 +29,9 @@
                 
                 ```
                 {
-                				 	msgType : "leaveRoom”,
-                		      guestId: “aaa1234”,
-                					sendTime  : yyyymmmdddhhhmmss        
+                	 	msgType : "leaveRoom”,
+                	    guestId: “aaa1234”,
+                	    sendTime  : yyyymmmdddhhhmmss        
                 };
                 ```
                 
@@ -46,12 +46,12 @@
                 
                 ```
                 {
-                					msgType : ”sendContentMsg”,
-                		      polaroidId: “basd23as-22323..",
-                			    imgUrl : “http://.....”,
-                			    title : “덕지덕지 회고방”,
-                			    content: “회고를 시작합니다!.....”,
-                					sendTime : yyyymmmdddhhhmmss        
+                		msgType : ”sendContentMsg”,
+                	    polaroidId: “basd23as-22323..",
+                	    imgUrl : “http://.....”,
+                		title : “덕지덕지 회고방”,
+                		content: “회고를 시작합니다!.....”,
+                		sendTime : yyyymmmdddhhhmmss        
                 };
                 ```
                 
@@ -72,12 +72,12 @@
                 
                 ```
                 {
-                					msgType: ”sendPositionMsg”,
-                		      polaroidId: “basd23as-22323..",
-                			    posX: 100,
-                 					posY: 100,
-                					rotation: ??,
-                					sendTime : yyyymmmdddhhhmmss        
+                		msgType: ”sendPositionMsg”,
+                	    polaroidId: “basd23as-22323..",
+                	    posX: 100,
+                 	    posY: 100,
+                		rotation: ??,
+                		sendTime : yyyymmmdddhhhmmss        
                 };
                 ```
                 
@@ -94,9 +94,9 @@
             
             ```
             {
-            					msgType: ”joinRoom”,
-            		      joinerId: “aaa9418”,
-            					sendTime : yyyymmmdddhhhmmss        
+            		msgType: ”joinRoom”,
+            	    joinerId: “aaa9418”,
+            		sendTime : yyyymmmdddhhhmmss        
             };
             ```
             
@@ -107,9 +107,9 @@
             
             ```
             {
-            					msg_type : ”outMsg”,
-            		      leaver_id: “aaa9418”,
-            					sendTime : yyyymmmdddhhhmmss        
+            	    msg_type : ”outMsg”,
+            		leaver_id: “aaa9418”,
+            		sendTime : yyyymmmdddhhhmmss        
             };
             ```
             
@@ -123,12 +123,12 @@
             
             ```
             {
-            					msgType : ”receiveContentMsg”,
-            		      polaroidId: “basd23as-22323..",
-            			    imgUrl: “http://.....”,
-            			    title: “덕지덕지 회고방”,
-            			    content: “회고를 시작합니다!.....”,
-            					sendTime : yyyymmmdddhhhmmss        
+            		msgType : ”receiveContentMsg”,
+            		polaroidId: “basd23as-22323..",
+            		imgUrl: “http://.....”,
+            		title: “덕지덕지 회고방”,
+            		content: “회고를 시작합니다!.....”,
+            		sendTime : yyyymmmdddhhhmmss        
             };
             ```
             
@@ -142,11 +142,11 @@
             
             ```
             {
-            					msgType : ”receivePositionMsg”,
-            		      polaroidId: “basd23as-22323..",
-            			    posX: 100,
-             					poyY: 100,
-            					rotation: ??,
-            					sendTime : yyyymmmdddhhhmmss        
+            		msgType : ”receivePositionMsg”,
+            		polaroidId: “basd23as-22323..",
+            		posX: 100,
+             		poyY: 100,
+            		rotation: ??,
+            		sendTime : yyyymmmdddhhhmmss        
             };
             ```
