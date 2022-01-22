@@ -16,8 +16,8 @@
                 ```
                 {
                 	    msgType : ”joinRoom”,
-                		guestId: “aaa1234”,
-                		sendTime : yyyymmmdddhhhmmss        
+                        guestId: “aaa1234”,
+                	    sendTime : yyyymmmdddhhhmmss        
                 };
                 ```
                 
@@ -29,8 +29,8 @@
                 
                 ```
                 {
-                	 	msgType : "leaveRoom”,
-                	    guestId: “aaa1234”,
+                	    msgType : "leaveRoom”,
+                        guestId: “aaa1234”,
                 	    sendTime  : yyyymmmdddhhhmmss        
                 };
                 ```
@@ -46,8 +46,8 @@
                 
                 ```
                 {
-                		msgType : ”sendContentMsg”,
-                	    polaroidId: “basd23as-22323..",
+                    	msgType : ”sendContentMsg”,
+                        polaroidId: “basd23as-22323..",
                 	    imgUrl : “http://.....”,
                 		title : “덕지덕지 회고방”,
                 		content: “회고를 시작합니다!.....”,
