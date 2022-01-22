@@ -11,44 +11,107 @@
 <div class="content" data-room-id="{{room.id}}" data-member="{{name}}">
     <ul class="chat_box">
     </ul>
-    <input name="roomId">
-    <input name="message">
+    폴라로이드 id : <input name="polaroidId"><br>
+    imgUrl : <input name="imgUrl"><br>
+    title : <input name="title"><br>
+    content : <input name="content"><br><br>
+    <hr>
+    posX : <input name="posX"><br><br>
+    posY : <input name="posY"><br><br>
+    rotation : <input name="rotation"><br><br>
+
     <button class="send">보내기</button>
+    <button class="leave">채팅방 퇴장</button>
 </div>
 
 <script type="text/javascript">
 
-   // $(function () {
-        var chatBox = $('.chat_box');
-        var messageInput = $('input[name="message"]');
-        //var roomId = $('input[name="roomId"]');
-        var roomId = [[${roomId}]];
-        var sendBtn = $('.send');
-        var name = '[[${name}]]';
+        let roomId = '[[${roomId}]]';
+        let userId = '[[${userId}]]';
+        let chatBox = $('.chat_box');
+        /////////////////////////
+        let sendBtn = $('.send');
+        let leaveBtn = $('.leave');
 
         console.log('roomId : ' + roomId);
-        console.log('name : ' + name);
+        console.log('userId : ' + userId);
 
-        var sock = new SockJS("/stomp/chat");
-        var client = Stomp.over(sock); // 1. SockJS를 내부에 들고 있는 client를 내어준다.
+        let sock = new SockJS("/stomp/chat"); // 채팅방 접속 url
+        let client = Stomp.over(sock);
 
-        // 2. connection이 맺어지면 실행된다.
+        // 2. connection이 맺어지면 실행
+        // -> 1. 채팅방 입장
         client.connect({}, function () {
-            // 3. send(path, header, message)로 메시지를 보낼 수 있다.
-            client.send('/publish/chat/join', {}, JSON.stringify({roomId: roomId, writer: name}));
-            // 4. subscribe(path, callback)로 메시지를 받을 수 있다. callback 첫번째 파라미터의 body로 메시지의 내용이 들어온다.
-            client.subscribe('/subscribe/chat/room/' + roomId, function (chat) {
-                var content = JSON.parse(chat.body);
-                chatBox.append('<li>' + content.message + '(' + content.writer + ')</li>')
+
+            client.send('/publish/room/join/' + roomId, {}, JSON.stringify({msgType: "joinRoom", guestId: userId, sendTime: new Date()})); // 방 들어왔다고 채널에 알림(같은 방에 있는 다른 사람들이 받음)
+                // 방에 들어왔으니 해당 방 채널을 구독 -> 이곳으로 같은 방에 있는 다른사람의 채팅내역 전달됨
+                // 데이터 수신(1. 채팅방 참여 메시지 수신
+                client.subscribe('/subscribe/room/' + roomId, function (chat) {
+                    let content = JSON.parse(chat.body);
+                    console.log(content);
+                    let msgType = content['msgType'];
+                    let polaroidId = content['polaroidId'];
+                    let msg = content['content'];
+                    let guestId = content['guestId'];
+                    //let posX = contenxt['']
+
+                    if(guestId == userId) return;
+
+                    console.log("msgType : " + msgType);
+                    if(msgType == "joinRoom") {
+                        chatBox.append('<li>' + guestId + '입장하였습니다.</li>');
+                    } else if(msgType == "receiveContentMsg") {
+                        chatBox.append('<li>' + polaroidId + '(' + msg + ')</li>');
+                    } else if(msgType == "receivePositionMsg") {
+                        //chatBox.append('<li>' + polaroidId + '(' + msg + ')</li>');
+                    }
+                    //chatBox.append('<li>' + content.message + '(' + content.writer + ')</li>');
             });
         });
 
-        sendBtn.click(function () {
-            var message = messageInput.val();
-            client.send('/publish/chat/message', {}, JSON.stringify({roomId: roomId, message: message, writer: name}));
-            messageInput.val('');
+        // 2. 채팅방 퇴장
+        leaveBtn.click(function ( ) {
+            client.send('/publish/room/leave/' + roomId, {}, JSON.stringify({msgType: "leaveRoom", guestId: userId, sendTime: new Date()})); // 방 들어왔다고 채널에 알림(같은 방에 있는 다른 사람들이 받음)
+            client.close(); // close를 어떻게하는지?
         });
-   // });
+
+        // 메시지 전송을 하면 같은 방에있는 다른 사람들에게 메시지 전송 -> 정확히 말하면 채널로 전송하고 다른 사람들은 그 채널 통해 메시지 받음
+        // 3. 데이터 전송 case_1
+       sendBtn.click(function () {
+           let polaroidId = $('input[name="polaroidId"]').val();
+           let imgUrl = $('input[name="imgUrl"]').val();
+           let title = $('input[name="title"]').val();
+           let content = $('input[name="content"]').val();
+
+           console.log("polaroidId : " + polaroidId);
+           console.log("imgUrl : " + imgUrl);
+           console.log("title : " + title);
+           console.log("content : " + content);
+
+           client.send('/publish/room/content/' + roomId, {}, JSON.stringify({msgType: "sendContentMsg", polaroidId: polaroidId, imgUrl: imgUrl,
+                                                        title: title, content: content, sendTime: new Date()}));
+           $('input[name="polaroidId"]').val('');
+           $('input[name="imgUrl"]').val('');
+           $('input[name="title"]').val('');
+           $('input[name="content"]').val('');
+       });
+
+       // 4. 데이터 전송 case_2
+        sendBtn.click(function () {
+            let polaroidId = $('input[name="polaroidId"]').val();
+            let posX = $('input[name="posX"]').val();
+            let posY = $('input[name="posY"]').val();
+            let rotation = $('input[name="rotation"]').val();
+
+            client.send('/publish/room/position/' + roomId, {}, JSON.stringify({msgType: "sendContentMsg", polaroidId: polaroidId, posX: posX,
+                posY: posY, rotation: rotation, sendTime: new Date()}));
+
+            $('input[name="polaroidId"]').val('');
+            $('input[name="posX"]').val('');
+            $('input[name="posY"]').val('');
+            $('input[name="rotation"]').val('');
+        });
+
 </script>
 </body>
 </html>
