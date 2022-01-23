@@ -20,7 +20,8 @@
     posY : <input name="posY"><br><br>
     rotation : <input name="rotation"><br><br>
 
-    <button class="send">보내기</button>
+    <button class="send">보내기(case1)</button>
+    <button class="send2">보내기(case2)</button>
     <button class="leave">채팅방 퇴장</button>
 </div>
 
@@ -29,8 +30,8 @@
         let roomId = '[[${roomId}]]';
         let userId = '[[${userId}]]';
         let chatBox = $('.chat_box');
-        /////////////////////////
         let sendBtn = $('.send');
+        let sendBtn2 = $('.send2');
         let leaveBtn = $('.leave');
 
         console.log('roomId : ' + roomId);
@@ -67,12 +68,18 @@
                     }
                     //chatBox.append('<li>' + content.message + '(' + content.writer + ')</li>');
             });
+        }, function(error) {
+            console.log(error);
         });
 
         // 2. 채팅방 퇴장
         leaveBtn.click(function ( ) {
             client.send('/publish/room/leave/' + roomId, {}, JSON.stringify({msgType: "leaveRoom", guestId: userId, sendTime: new Date()})); // 방 들어왔다고 채널에 알림(같은 방에 있는 다른 사람들이 받음)
-            client.close(); // close를 어떻게하는지?
+            if(client != null) {
+                client.disconnect(function( ) {
+                    console.log("Disconnected");
+                });
+            }
         });
 
         // 메시지 전송을 하면 같은 방에있는 다른 사람들에게 메시지 전송 -> 정확히 말하면 채널로 전송하고 다른 사람들은 그 채널 통해 메시지 받음
@@ -97,7 +104,7 @@
        });
 
        // 4. 데이터 전송 case_2
-        sendBtn.click(function () {
+        sendBtn2.click(function () {
             let polaroidId = $('input[name="polaroidId"]').val();
             let posX = $('input[name="posX"]').val();
             let posY = $('input[name="posY"]').val();
