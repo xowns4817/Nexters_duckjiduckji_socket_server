@@ -3,6 +3,7 @@ package com.nexters.duckjiduckji.Controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexters.duckjiduckji.Dto.MessageDto;
+import com.nexters.duckjiduckji.Dto.PolaroidContentCreateDto;
 import com.nexters.duckjiduckji.Util.ApiHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -23,10 +24,14 @@ public class StompChatController {
     public void roomJoin(@DestinationVariable("roomId") String roomId, MessageDto messageDto) throws JsonProcessingException {
         System.out.println("RoomId : " + roomId);
         System.out.println("message : " +  messageDto.toString());
+
+        // 폴라로이드 생성 요청 일때는 만들어진 폴라로이드 ID 추가해서 sub 채널로 보내야됨
+        if(messageDto instanceof PolaroidContentCreateDto) {
+            ((PolaroidContentCreateDto) messageDto).setContentId("asdlksldk"); // api 서버에서 폴라로이드 만들고 리턴해준 id 세팅
+        }
         String json = new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(messageDto);
         System.out.println(json);
 
-        // 폴라로이드 생성일때는 만들어진 ID 추가해서 sub채널로 보내야됨
         template.convertAndSend("/subscribe/room/" + roomId, messageDto);
     }
 }

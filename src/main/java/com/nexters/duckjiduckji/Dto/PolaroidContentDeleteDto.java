@@ -9,9 +9,10 @@ import org.springframework.lang.Nullable;
 @Builder
 @Getter
 @ToString
-public class PolaroidContentDeleteDto extends MessageDto{
+public class PolaroidContentDeleteDto implements MessageDto{
     @Builder.Default
     private MsgType msgType = MsgType.DELETE;
+    private String contentId;
     private String contentType; // "PORAROID", "POSTIT"
     private String sendTime;
 }

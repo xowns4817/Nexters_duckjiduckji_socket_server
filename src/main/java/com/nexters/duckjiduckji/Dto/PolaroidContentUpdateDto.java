@@ -9,12 +9,11 @@ import org.springframework.lang.Nullable;
 @Builder
 @Getter
 @ToString
-public class PolaroidContentUpdateDto extends MessageDto{
+public class PolaroidContentUpdateDto implements MessageDto{
     @Builder.Default
     private MsgType msgType = MsgType.UPDATE;
     private String contentType; // "PORAROID", "POSTIT"
-
-   // @Nullable
+    private String contentId;
     private PolaroidInnerData data;
     private String sendTime;
 }

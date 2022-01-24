@@ -2,7 +2,6 @@ package com.nexters.duckjiduckji.Dto;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import lombok.*;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.EXISTING_PROPERTY,
@@ -16,7 +15,5 @@ import lombok.*;
         @JsonSubTypes.Type(name = "DRAG", value = PolaroidContentUpdateDto.class),
         @JsonSubTypes.Type(name = "DELETE", value = PolaroidContentDeleteDto.class)
 })
-@Getter
-@ToString
-public abstract class MessageDto {
+public interface MessageDto {
 }

@@ -8,7 +8,7 @@ import lombok.ToString;
 @Builder
 @Getter
 @ToString
-public class OutDto extends MessageDto {
+public class OutDto implements MessageDto {
     @Builder.Default
     private MsgType msgType = MsgType.LEAVE;
     private String userId;
