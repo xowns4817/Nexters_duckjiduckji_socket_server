@@ -20,9 +20,12 @@
     posY : <input name="posY"><br><br>
     rotation : <input name="rotation"><br><br>
 
-    <button class="send">보내기(case1)</button>
-    <button class="send2">보내기(case2)</button>
+    <button class="send">폴라로이드 생성</button>
+    <button class="send2">데이터 전송(이미지,내용)</button>
+    <button class="send3">데이터 전송(좌표)</button>
+    <button class="send4">폴라로이드 삭제</button>
     <button class="leave">채팅방 퇴장</button>
+
 </div>
 
 <script type="text/javascript">
@@ -32,6 +35,8 @@
         let chatBox = $('.chat_box');
         let sendBtn = $('.send');
         let sendBtn2 = $('.send2');
+        let sendBtn3= $('.send3');
+        let sendBtn4= $('.send4');
         let leaveBtn = $('.leave');
 
         console.log('roomId : ' + roomId);
@@ -40,11 +45,17 @@
         let sock = new SockJS("/stomp/chat"); // 채팅방 접속 url
         let client = Stomp.over(sock);
 
+        // 1-------6 데이터 정의
+        let JOIN_DATA = {msgType: "JOIN", userId: userId, sendTime: new Date()};
+        let LEAVE_DATA = {msgType: "LEAVE", userId: userId, sendTime: new Date()};
+        let CREATE_DATA = { };
+        let DELETE_DATA = { };
+
         // 2. connection이 맺어지면 실행
         // -> 1. 채팅방 입장
         client.connect({}, function () {
 
-            client.send('/publish/room/join/' + roomId, {}, JSON.stringify({msgType: "joinRoom", guestId: userId, sendTime: new Date()})); // 방 들어왔다고 채널에 알림(같은 방에 있는 다른 사람들이 받음)
+            client.send('/publish/room/' + roomId, {}, JSON.stringify(JOIN_DATA)); // 방 들어왔다고 채널에 알림(같은 방에 있는 다른 사람들이 받음)
                 // 방에 들어왔으니 해당 방 채널을 구독 -> 이곳으로 같은 방에 있는 다른사람의 채팅내역 전달됨
                 // 데이터 수신(1. 채팅방 참여 메시지 수신
                 client.subscribe('/subscribe/room/' + roomId, function (chat) {
@@ -53,13 +64,12 @@
                     let msgType = content['msgType'];
                     let polaroidId = content['polaroidId'];
                     let msg = content['content'];
-                    let guestId = content['guestId'];
-                    //let posX = contenxt['']
+                    let guestId = content['userId'];
 
                     if(guestId == userId) return;
 
                     console.log("msgType : " + msgType);
-                    if(msgType == "joinRoom") {
+                    if(msgType == "JOIN") {
                         chatBox.append('<li>' + guestId + '입장하였습니다.</li>');
                     } else if(msgType == "receiveContentMsg") {
                         chatBox.append('<li>' + polaroidId + '(' + msg + ')</li>');
@@ -74,7 +84,7 @@
 
         // 2. 채팅방 퇴장
         leaveBtn.click(function ( ) {
-            client.send('/publish/room/leave/' + roomId, {}, JSON.stringify({msgType: "leaveRoom", guestId: userId, sendTime: new Date()})); // 방 들어왔다고 채널에 알림(같은 방에 있는 다른 사람들이 받음)
+            client.send('/publish/room/' + roomId, {}, JSON.stringify(LEAVE_DATA)); // 방 들어왔다고 채널에 알림(같은 방에 있는 다른 사람들이 받음)
             if(client != null) {
                 client.disconnect(function( ) {
                     console.log("Disconnected");
@@ -83,35 +93,121 @@
         });
 
         // 메시지 전송을 하면 같은 방에있는 다른 사람들에게 메시지 전송 -> 정확히 말하면 채널로 전송하고 다른 사람들은 그 채널 통해 메시지 받음
-        // 3. 데이터 전송 case_1
-       sendBtn.click(function () {
-           let polaroidId = $('input[name="polaroidId"]').val();
-           let imgUrl = $('input[name="imgUrl"]').val();
-           let title = $('input[name="title"]').val();
-           let content = $('input[name="content"]').val();
+        // 3. 폴라로이드 생성
+        sendBtn.click(function () {
+            let polaroidId = $('input[name="polaroidId"]').val();
+            let imgUrl = $('input[name="imgUrl"]').val();
+            let title = $('input[name="title"]').val();
+            let content = $('input[name="content"]').val();
+            let posX = $('input[name="posX"]').val();
+            let posY = $('input[name="posY"]').val();
+            let rotation = $('input[name="rotation"]').val();
 
-           console.log("polaroidId : " + polaroidId);
-           console.log("imgUrl : " + imgUrl);
-           console.log("title : " + title);
-           console.log("content : " + content);
 
-           client.send('/publish/room/content/' + roomId, {}, JSON.stringify({msgType: "sendContentMsg", polaroidId: polaroidId, imgUrl: imgUrl,
-                                                        title: title, content: content, sendTime: new Date()}));
-           $('input[name="polaroidId"]').val('');
-           $('input[name="imgUrl"]').val('');
-           $('input[name="title"]').val('');
-           $('input[name="content"]').val('');
-       });
+            console.log("contentId : " + polaroidId);
+            console.log("imgUrl : " + imgUrl);
+            console.log("title : " + title);
+            console.log("content : " + content);
+            console.log("posX : " + posX);
+            console.log("posY : " + posY);
+            console.log("rotation : " + rotation);
 
-       // 4. 데이터 전송 case_2
+            let CREATE_DATA = {
+                msgType: "CREATE",
+                contentType: "PORAROID",
+                data : {
+                        imgUrl: imgUrl,
+                        title: title,
+                        content: content,
+                        width: "100",
+                        height: "100",
+                        opacity: "0.1",
+                        font: "FONT",
+                        point: {
+                            x: posX,
+                            y: posY,
+                            rotation: rotation
+                        }
+                },
+                sendTime: new Date()
+            };
+
+            client.send('/publish/room/' + roomId, {}, JSON.stringify(CREATE_DATA));
+            $('input[name="polaroidId"]').val('');
+            $('input[name="imgUrl"]').val('');
+            $('input[name="title"]').val('');
+            $('input[name="content"]').val('');
+        });
+
+       // 4. 폴라로이드 수정
         sendBtn2.click(function () {
+            let polaroidId = $('input[name="polaroidId"]').val();
+            let imgUrl = $('input[name="imgUrl"]').val();
+            let title = $('input[name="title"]').val();
+            let content = $('input[name="content"]').val();
+
+            console.log("contentId : " + polaroidId);
+            console.log("imgUrl : " + imgUrl);
+            console.log("title : " + title);
+            console.log("content : " + content);
+
+            let UPDATE_DATA = {
+                msgType: "UPDATE",
+                contentType: "PORAROID",
+                contentId: polaroidId,
+                data : {
+                    imgUrl: imgUrl,
+                    title: title,
+                    content: content
+                },
+                sendTime: new Date()
+            };
+
+            client.send('/publish/room/' + roomId, {}, JSON.stringify(UPDATE_DATA));
+            $('input[name="polaroidId"]').val('');
+            $('input[name="imgUrl"]').val('');
+            $('input[name="title"]').val('');
+            $('input[name="content"]').val('');
+        });
+
+        // 5. 폴라로이드 삭제
+        sendBtn4.click(function () {
+            let polaroidId = $('input[name="polaroidId"]').val();
+            console.log("contentId : " + polaroidId);
+
+            let DELETE_DATA = {
+                msgType: "DELETE",
+                contentType: "PORAROID",
+                contentId: polaroidId,
+                sendTime: new Date()
+            };
+
+            client.send('/publish/room/' + roomId, {}, JSON.stringify(DELETE_DATA));
+            $('input[name="polaroidId"]').val('');
+        });
+
+       // 6. 드레그 이벤트
+        sendBtn3.click(function () {
             let polaroidId = $('input[name="polaroidId"]').val();
             let posX = $('input[name="posX"]').val();
             let posY = $('input[name="posY"]').val();
             let rotation = $('input[name="rotation"]').val();
 
-            client.send('/publish/room/position/' + roomId, {}, JSON.stringify({msgType: "sendContentMsg", polaroidId: polaroidId, posX: posX,
-                posY: posY, rotation: rotation, sendTime: new Date()}));
+            let DRAG_DATA = {
+                    msgType: "DRAG",
+                    contentType: "POLAROID",
+                    contentId: polaroidId,
+                    data: {
+                        point : {
+                            x: posX,
+                            y: posY,
+                            rotation: rotation
+                        }
+                    },
+                    sendTime: new Date()
+            };
+
+            client.send('/publish/room/' + roomId, {}, JSON.stringify(DRAG_DATA));
 
             $('input[name="polaroidId"]').val('');
             $('input[name="posX"]').val('');

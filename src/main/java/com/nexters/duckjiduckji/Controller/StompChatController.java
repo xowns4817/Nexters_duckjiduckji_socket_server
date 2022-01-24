@@ -1,8 +1,9 @@
 package com.nexters.duckjiduckji.Controller;
 
-import com.nexters.duckjiduckji.Dto.InOutDto;
-import com.nexters.duckjiduckji.Dto.PolaroidContentDto;
-import com.nexters.duckjiduckji.Dto.PolaroidPositionDto;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nexters.duckjiduckji.Dto.MessageDto;
+import com.nexters.duckjiduckji.Util.ApiHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -13,40 +14,19 @@ import org.springframework.stereotype.Controller;
 @RequiredArgsConstructor
 public class StompChatController {
     private final SimpMessagingTemplate template; //특정 Broker로 메세지를 전달
+    private final ApiHelper apiHelper;
 
     // 클라에서 publish로 보내면 얘가 받음 -> publish/room/{roomId}
 
     // 방 in 처리
-    @MessageMapping(value = "/room/join/{roomId}")
-    public void roomJoin(@DestinationVariable("roomId") String roomId, InOutDto inDto){
+    @MessageMapping(value = "/room/{roomId}")
+    public void roomJoin(@DestinationVariable("roomId") String roomId, MessageDto messageDto) throws JsonProcessingException {
         System.out.println("RoomId : " + roomId);
-        System.out.println("message : " +  inDto.toString());
-        template.convertAndSend("/subscribe/room/" + roomId, inDto);
-    }
+        System.out.println("message : " +  messageDto.toString());
+        String json = new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(messageDto);
+        System.out.println(json);
 
-    // 방 out 처리
-    @MessageMapping(value = "/room/leave/{roomId}")
-    public void roomLeave(@DestinationVariable("roomId") String roomId, InOutDto outDto){
-        System.out.println("RoomId : " + roomId);
-        System.out.println("message : " +  outDto.toString());
-        template.convertAndSend("/subscribe/room/" + roomId, outDto);
-    }
-
-    // 방에 데이터 publish (case 1) -> 이미지, 제목, 내용
-    @MessageMapping(value = "/room/content/{roomId}")
-    public void roomContent(@DestinationVariable("roomId") String roomId, PolaroidContentDto contentDto){
-        System.out.println("RoomId : " + roomId);
-        System.out.println("message : " +  contentDto.toString());
-        contentDto.setMsgType("receiveContentMsg");
-        template.convertAndSend("/subscribe/room/" + roomId, contentDto);
-    }
-
-    // 방에 데이터 publish (case 2) -> 좌표, 크기, rotation 값
-    @MessageMapping(value = "/room/position/{roomId}")
-    public void roomPosition(@DestinationVariable("roomId") String roomId, PolaroidPositionDto positionDto){
-        System.out.println("RoomId : " + roomId);
-        System.out.println("message : " +  positionDto.toString());
-        positionDto.setMsgType("receivePositionMsg");
-        template.convertAndSend("/subscribe/room/" + roomId, positionDto);
+        // 폴라로이드 생성일때는 만들어진 ID 추가해서 sub채널로 보내야됨
+        template.convertAndSend("/subscribe/room/" + roomId, messageDto);
     }
 }
