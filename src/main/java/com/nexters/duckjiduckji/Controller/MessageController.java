@@ -11,13 +11,12 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
+// 클라에서 publish로 보내면 얘가 받음 -> publish/room/{roomId}
 @Controller
 @RequiredArgsConstructor
-public class StompChatController {
+public class MessageController {
     private final SimpMessagingTemplate template; //특정 Broker로 메세지를 전달
     private final ApiHelper apiHelper;
-
-    // 클라에서 publish로 보내면 얘가 받음 -> publish/room/{roomId}
 
     // 방 in 처리
     @MessageMapping(value = "/room/{roomId}")
