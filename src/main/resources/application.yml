@@ -1,0 +1,55 @@
+
+spring:
+  profiles:
+    active: local
+
+api:
+  server:
+     info: http://
+
+file:
+  server:
+      info: http://
+
+log:
+  path: /home
+
+
+server:
+  port: 8081
+---
+spring:
+  profiles: dev
+
+server:
+  port: 8081
+
+api:
+  server:
+    info: http://
+
+file:
+  server:
+    info: http://
+
+log:
+  path: /home
+
+---
+
+spring:
+  profiles: prod
+
+server:
+  port: 8081
+
+api:
+  server:
+    info: http://
+
+file:
+  server:
+    info: http://
+
+log:
+  path: /home
