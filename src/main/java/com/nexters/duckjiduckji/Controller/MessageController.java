@@ -27,7 +27,7 @@ public class MessageController {
 
         System.out.println(jsonUtil.printJson(message));
         MsgType msgType = message.getMsgType();
-        Message forwardMessage = null;
+        Message forwardMessage = message;
 
         if(msgType == MsgType.CREATE) forwardMessage = messageService.MessageCreateService(message);
         else if(msgType == MsgType.UPDATE) forwardMessage = messageService.MessageUpdateService(message);
