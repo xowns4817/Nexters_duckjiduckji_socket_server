@@ -10,7 +10,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class OutDto implements MessageDto {
+public class OutMessage implements Message {
     @Builder.Default
     private MsgType msgType = MsgType.LEAVE;
     private String userId;

@@ -5,7 +5,7 @@ import lombok.*;
 @Builder
 @Getter
 @ToString
-public class PolaroidPositionData {
+public class ContentPositionData {
     private String x;
     private String y;
     private String rotation;

@@ -7,7 +7,7 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
-public class InDto implements MessageDto {
+public class InMessage implements Message {
 
     @Builder.Default
     private MsgType msgType = MsgType.JOIN;

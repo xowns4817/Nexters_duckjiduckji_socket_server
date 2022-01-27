@@ -5,17 +5,16 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.lang.Nullable;
 
 @Builder
 @Getter
 @Setter
 @ToString
-public class PolaroidContentCreateDto implements MessageDto{
+public class ContentDeleteDto implements Message {
     @Builder.Default
-    private MsgType msgType = MsgType.CREATE;
+    private MsgType msgType = MsgType.DELETE;
     private String contentId;
     private String contentType; // "PORAROID", "POSTIT"
-    private PolaroidInnerData data;
     private String sendTime;
 }
+

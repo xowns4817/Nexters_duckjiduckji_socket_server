@@ -2,9 +2,7 @@ package com.nexters.duckjiduckji.Controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nexters.duckjiduckji.Const.MsgType;
-import com.nexters.duckjiduckji.Dto.MessageDto;
-import com.nexters.duckjiduckji.Dto.PolaroidContentCreateDto;
+import com.nexters.duckjiduckji.Dto.Message;
 import com.nexters.duckjiduckji.Service.MessageService;
 import com.nexters.duckjiduckji.Util.ApiHelper;
 import lombok.RequiredArgsConstructor;
@@ -23,12 +21,12 @@ public class MessageController {
 
     // 방 in 처리
     @MessageMapping(value = "/room/{roomId}")
-    public void roomJoin(@DestinationVariable("roomId") String roomId, MessageDto messageDto) throws JsonProcessingException {
+    public void roomJoin(@DestinationVariable("roomId") String roomId, Message messageDto) throws JsonProcessingException {
         System.out.println("RoomId : " + roomId);
         String json = new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(messageDto);
         System.out.println(json);
 
-        MessageDto newMessageDto = messageService.callApiServer(messageDto);
+        Message newMessageDto = messageService.callApiServer(messageDto);
 
         template.convertAndSend("/subscribe/room/" + roomId, newMessageDto);
     }

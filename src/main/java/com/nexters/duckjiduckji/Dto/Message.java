@@ -10,10 +10,10 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 @JsonSubTypes({
         @JsonSubTypes.Type(name = "JOIN", value = InMessage.class),
         @JsonSubTypes.Type(name = "LEAVE", value = OutMessage.class),
-        @JsonSubTypes.Type(name = "CREATE", value = PolaroidContentCreateDto.class),
-        @JsonSubTypes.Type(name = "UPDATE", value = PolaroidContentUpdateDto.class),
-        @JsonSubTypes.Type(name = "DRAG", value = PolaroidContentUpdateDto.class),
-        @JsonSubTypes.Type(name = "DELETE", value = PolaroidContentDeleteDto.class)
+        @JsonSubTypes.Type(name = "CREATE", value = ContentCreateDto.class),
+        @JsonSubTypes.Type(name = "UPDATE", value = ContentUpdateDto.class),
+        @JsonSubTypes.Type(name = "DRAG", value = ContentUpdateDto.class),
+        @JsonSubTypes.Type(name = "DELETE", value = ContentDeleteDto.class)
 })
-public interface MessageDto {
+public interface Message {
 }

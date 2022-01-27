@@ -15,35 +15,35 @@ public class MessageService {
     private final ApiHelper apiHelper;
 
     // return messageDto instance
-    public MsgType getMsgType(MessageDto messageDto) {
-        if(messageDto instanceof PolaroidContentCreateDto) return MsgType.CREATE;
-        else if(messageDto instanceof PolaroidContentUpdateDto) return MsgType.UPDATE;
-        else if(messageDto instanceof PolaroidContentDeleteDto) return MsgType.DELETE;
-        else if(messageDto instanceof InDto) return MsgType.JOIN;
-        else if(messageDto instanceof OutDto) return MsgType.LEAVE;
+    public MsgType getMsgType(Message messageDto) {
+        if(messageDto instanceof ContentCreateDto) return MsgType.CREATE;
+        else if(messageDto instanceof ContentUpdateDto) return MsgType.UPDATE;
+        else if(messageDto instanceof ContentDeleteDto) return MsgType.DELETE;
+        else if(messageDto instanceof InMessage) return MsgType.JOIN;
+        else if(messageDto instanceof OutMessage) return MsgType.LEAVE;
         else return null;
     };
 
-    public MessageDto callApiServer(MessageDto messageDto) {
+    public Message callApiServer(Message messageDto) {
 
         MsgType msgType = getMsgType(messageDto);
         // 폴라로이드 생성 요청 일때는 만들어진 폴라로이드 ID 추가해서 sub 채널로 보내야됨
         if(msgType == MsgType.CREATE) { // POST
             // api server call
-            ((PolaroidContentCreateDto) messageDto).setSendTime((apiHelper.getCurrentTime()));
-            ((PolaroidContentCreateDto) messageDto).setContentId(("aasdasdasd"));
+            ((ContentCreateDto) messageDto).setSendTime((apiHelper.getCurrentTime()));
+            ((ContentCreateDto) messageDto).setContentId(("aasdasdasd"));
         } else if(msgType == MsgType.UPDATE) { // PUT
             // api server call
-            ((PolaroidContentUpdateDto) messageDto).setSendTime((apiHelper.getCurrentTime()));
+            ((ContentUpdateDto) messageDto).setSendTime((apiHelper.getCurrentTime()));
         } else if(msgType == MsgType.DELETE) { // DELETE
             // api server call
-            ((PolaroidContentDeleteDto) messageDto).setSendTime((apiHelper.getCurrentTime()));
+            ((ContentDeleteDto) messageDto).setSendTime((apiHelper.getCurrentTime()));
         } else if(msgType == MsgType.JOIN) { // POST
             // api server call
-            ((InDto) messageDto).setSendTime((apiHelper.getCurrentTime()));
+            ((InMessage) messageDto).setSendTime((apiHelper.getCurrentTime()));
         } else if(msgType == MsgType.LEAVE) { // POST
             // api server call
-            ((OutDto) messageDto).setSendTime((apiHelper.getCurrentTime()));
+            ((OutMessage) messageDto).setSendTime((apiHelper.getCurrentTime()));
         }
 
         return messageDto;
