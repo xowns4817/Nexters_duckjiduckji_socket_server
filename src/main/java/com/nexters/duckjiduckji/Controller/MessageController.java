@@ -6,6 +6,7 @@ import com.nexters.duckjiduckji.Const.MsgType;
 import com.nexters.duckjiduckji.Dto.*;
 import com.nexters.duckjiduckji.Service.MessageService;
 import com.nexters.duckjiduckji.Util.ApiHelper;
+import com.nexters.duckjiduckji.Util.JsonUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -18,15 +19,13 @@ import org.springframework.stereotype.Controller;
 public class MessageController {
     private final SimpMessagingTemplate template; //특정 Broker로 메세지를 전달
     private final MessageService messageService;
-    private final ApiHelper apiHelper;
+    private final JsonUtil jsonUtil;
 
     // 방 in 처리
     @MessageMapping(value = "/room/{roomId}")
     public void roomJoin(@DestinationVariable("roomId") String roomId, Message message) throws JsonProcessingException {
-        System.out.println("RoomId : " + roomId);
-        String json = new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(message);
-        System.out.println(json);
 
+        System.out.println(jsonUtil.printJson(message));
         MsgType msgType = message.getMsgType();
         Message forwardMessage = null;
 
