@@ -11,9 +11,6 @@ file:
   server:
       info: http://
 
-log:
-  path: /home
-
 restemplate:
   connectionTimeOut: 3000
   readTimeOut: 300
@@ -23,6 +20,9 @@ restemplate:
 server:
   port: 8081
 
+logging:
+  level:
+    root: info
 
 ---
 spring:

@@ -14,13 +14,13 @@ import org.springframework.web.client.RestTemplate;
 @Configuration
 public class HttpClientConfig {
 
-    @Value("${restemplate.connectionTimeOut")
+    @Value("${restemplate.connectionTimeOut}")
     private int connectionTimeOut;
 
-    @Value("${restemplate.readTimeOut")
+    @Value("${restemplate.readTimeOut}")
     private int readTimeOut;
 
-    @Value("${restemplate.defaultMaxPerRoute")
+    @Value("${restemplate.defaultMaxPerRoute}")
     private int defaultMaxPerRoute;
 
     @Value("${restemplate.maxToal}")

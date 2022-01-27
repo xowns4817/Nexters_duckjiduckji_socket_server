@@ -4,6 +4,8 @@ import com.nexters.duckjiduckji.Const.MsgType;
 import com.nexters.duckjiduckji.Dto.*;
 import com.nexters.duckjiduckji.Util.ApiHelper;
 import lombok.RequiredArgsConstructor;
+
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,7 +16,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Service
+@Slf4j
 public class MessageService {
 
     private final RestTemplate restTemplate;
@@ -73,6 +79,6 @@ public class MessageService {
         ResponseEntity apiResponse = null;
 
         apiResponse = restTemplate.exchange(apiServerInfo, httpMethod, entity, clazz);
-        System.out.println(apiResponse.toString());
+        log.info(apiResponse.toString());
     }
 }
