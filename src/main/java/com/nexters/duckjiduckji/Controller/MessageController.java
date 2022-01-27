@@ -2,7 +2,8 @@ package com.nexters.duckjiduckji.Controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nexters.duckjiduckji.Dto.Message;
+import com.nexters.duckjiduckji.Const.MsgType;
+import com.nexters.duckjiduckji.Dto.*;
 import com.nexters.duckjiduckji.Service.MessageService;
 import com.nexters.duckjiduckji.Util.ApiHelper;
 import lombok.RequiredArgsConstructor;
@@ -21,13 +22,20 @@ public class MessageController {
 
     // 방 in 처리
     @MessageMapping(value = "/room/{roomId}")
-    public void roomJoin(@DestinationVariable("roomId") String roomId, Message messageDto) throws JsonProcessingException {
+    public void roomJoin(@DestinationVariable("roomId") String roomId, Message message) throws JsonProcessingException {
         System.out.println("RoomId : " + roomId);
-        String json = new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(messageDto);
+        String json = new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(message);
         System.out.println(json);
 
-        Message newMessageDto = messageService.callApiServer(messageDto);
+        MsgType msgType = message.getMsgType();
+        Message forwardMessage = null;
 
-        template.convertAndSend("/subscribe/room/" + roomId, newMessageDto);
+        if(msgType == MsgType.CREATE) forwardMessage = messageService.MessageCreateService(message);
+        else if(msgType == MsgType.UPDATE) forwardMessage = messageService.MessageUpdateService(message);
+        else if(msgType == MsgType.DELETE) forwardMessage = messageService.MessageDeleteService(message);
+        else if(msgType == MsgType.JOIN) forwardMessage = messageService.MessageInService(message);
+        else if(msgType == MsgType.LEAVE) forwardMessage = messageService.MessageOutService(message);
+
+        template.convertAndSend("/subscribe/room/" + roomId, forwardMessage);
     }
 }

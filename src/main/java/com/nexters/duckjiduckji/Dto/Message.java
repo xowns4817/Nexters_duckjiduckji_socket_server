@@ -2,6 +2,7 @@ package com.nexters.duckjiduckji.Dto;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.nexters.duckjiduckji.Const.MsgType;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.EXISTING_PROPERTY,
@@ -16,4 +17,5 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @JsonSubTypes.Type(name = "DELETE", value = ContentDeleteDto.class)
 })
 public interface Message {
+    MsgType getMsgType();
 }

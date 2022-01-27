@@ -17,4 +17,9 @@ public class ContentCreateDto implements Message {
     private String contentType; // "PORAROID", "POSTIT"
     private ContentInnerData data;
     private String sendTime;
+
+    @Override
+    public MsgType getMsgType() {
+        return msgType;
+    }
 }
