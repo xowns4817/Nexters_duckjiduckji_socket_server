@@ -15,9 +15,4 @@ public class ContentUpdateDto implements Message {
     private String contentId;
     private ContentInnerData data;
     private String sendTime;
-
-    @Override
-    public MsgType getMsgType() {
-        return msgType;
-    }
 }

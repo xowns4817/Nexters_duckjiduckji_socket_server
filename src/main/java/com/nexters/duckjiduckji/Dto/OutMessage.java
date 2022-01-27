@@ -13,9 +13,4 @@ public class OutMessage implements Message {
     private MsgType msgType = MsgType.LEAVE;
     private String userId;
     private String sendTime;
-
-    @Override
-    public MsgType getMsgType() {
-        return msgType;
-    }
 }

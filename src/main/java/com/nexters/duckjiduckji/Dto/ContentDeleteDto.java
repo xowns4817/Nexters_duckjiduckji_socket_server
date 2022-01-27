@@ -14,10 +14,5 @@ public class ContentDeleteDto implements Message {
     private String contentId;
     private String contentType; // "PORAROID", "POSTIT"
     private String sendTime;
-
-    @Override
-    public MsgType getMsgType() {
-        return msgType;
-    }
 }
 
