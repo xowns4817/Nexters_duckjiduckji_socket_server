@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
@@ -28,17 +29,17 @@ public class MessageController {
 
     // 방 in 처리
     @MessageMapping(value = "/room/{roomId}")
-    public void roomJoin(@DestinationVariable("roomId") String roomId, Message message) throws JsonProcessingException {
+    public void roomJoin(@DestinationVariable("roomId") String roomId, Message message)  {
 
         log.info(jsonUtil.printJson(message));
         MsgType msgType = message.getMsgType();
         Message forwardMessage = message;
 
-        if(msgType == MsgType.CREATE) forwardMessage = messageService.MessageCreateService(message);
-        else if(msgType == MsgType.UPDATE) forwardMessage = messageService.MessageUpdateService(message);
-        else if(msgType == MsgType.DELETE) forwardMessage = messageService.MessageDeleteService(message);
-        else if(msgType == MsgType.JOIN) forwardMessage = messageService.MessageInService(message);
-        else if(msgType == MsgType.LEAVE) forwardMessage = messageService.MessageOutService(message);
+        if(msgType == MsgType.CREATE) forwardMessage = messageService.MessageCreateService(message, roomId);
+        else if(msgType == MsgType.UPDATE) forwardMessage = messageService.MessageUpdateService(message, roomId);
+        else if(msgType == MsgType.DELETE) forwardMessage = messageService.MessageDeleteService(message, roomId);
+        else if(msgType == MsgType.JOIN) forwardMessage = messageService.MessageInService(message, roomId);
+        else if(msgType == MsgType.LEAVE) forwardMessage = messageService.MessageOutService(message, roomId);
 
         template.convertAndSend("/subscribe/room/" + roomId, forwardMessage);
     }

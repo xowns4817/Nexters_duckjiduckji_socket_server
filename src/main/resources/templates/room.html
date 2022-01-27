@@ -71,11 +71,20 @@
                     console.log("msgType : " + msgType);
                     if(msgType == "JOIN") {
                         chatBox.append('<li>' + guestId + '입장하였습니다.</li>');
-                    } else if(msgType == "receiveContentMsg") {
-                        chatBox.append('<li>' + polaroidId + '(' + msg + ')</li>');
-                    } else if(msgType == "receivePositionMsg") {
-                        //chatBox.append('<li>' + polaroidId + '(' + msg + ')</li>');
+                    } else if(msgType == "LEAVE") {
+                        chatBox.append('<li>' + guestId + '퇴장하였습니다.</li>');
+                    } else if(msgType == "CREATE") {
+                        chatBox.append('<li>' + polaroidId + '글 생성!</li>');
+                    } else if(msgType == "UPDATE") {
+                        chatBox.append('<li>' + polaroidId + '글 수정!</li>');
+                    } else if(msgType == "DELETE") {
+                        chatBox.append('<li>' + polaroidId + '글 삭제!</li>');
+                    } else if(msgType == "DRAG") {
+                        chatBox.append('<li>' + polaroidId + '글 위치 이동!</li>');
+                    } else if(msgType == "ERROR") {
+                        chatBox.append('<li>' + '서버 에러!!</li>');
                     }
+
                     //chatBox.append('<li>' + content.message + '(' + content.writer + ')</li>');
             });
         }, function(error) {
