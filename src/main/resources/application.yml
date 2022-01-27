@@ -14,9 +14,16 @@ file:
 log:
   path: /home
 
+restemplate:
+  connectionTimeOut: 3000
+  readTimeOut: 300
+  defaultMaxPerRoute: 20
+  maxToal: 50
 
 server:
   port: 8081
+
+
 ---
 spring:
   profiles: dev
@@ -35,6 +42,11 @@ file:
 log:
   path: /home
 
+restemplate:
+  connectionTimeOut: 3000
+  readTimeOut: 300
+  defaultMaxPerRoute: 20
+  maxToal: 50
 ---
 
 spring:
@@ -53,3 +65,9 @@ file:
 
 log:
   path: /home
+
+restemplate:
+  connectionTimeOut: 3000
+  readTimeOut: 300
+  defaultMaxPerRoute: 20
+  maxToal: 50
